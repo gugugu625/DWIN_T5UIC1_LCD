@@ -1,7 +1,7 @@
 # Class to monitor a rotary encoder and update a value.  You can either read the value when you need it, by calling getValue(), or
 # you can configure a callback which will be called whenever the value changes.
 
-import RPi.GPIO as GPIO
+import OPi.GPIO as GPIO
 
 class Encoder:
 
@@ -21,6 +21,7 @@ class Encoder:
         p1 = GPIO.input(self.leftPin)
         p2 = GPIO.input(self.rightPin)
         newState = "{}{}".format(p1, p2)
+        #print(newState)
 
         if self.state == "00": # Resting position
             if newState == "01": # Turned right 1

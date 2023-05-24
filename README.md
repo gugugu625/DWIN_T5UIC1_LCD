@@ -1,6 +1,9 @@
 # DWIN_T5UIC1_LCD
 
-## Python class for the Ender 3 V2 LCD runing klipper3d with Moonraker 
+## Python class for the Ender 3 V2 LCD runing klipper3d with OctoPrint / Moonraker 
+## This Repo is running on Orangepi zero2, you need to install OPi.GPIO Library.
+### For Orange Pi Zero2, OrangePi Zero 2, Orange Pi3, and Orange Pi Lite2:
+  `https://github.com/NadavK/OPI.GPIO`
 
 https://www.klipper3d.org
 
@@ -11,6 +14,12 @@ https://github.com/arksine/moonraker
 
 ## Setup:
 
+### If you already open the API socket, you can edit the socket in printerInterface.py line 256.
+
+## For OrangePi zero2
+### Open UART5 according to the reference manual, Connect TX,RX to UART5. Skip To "Enabling Klipper's API socket" and change LCD_COM_Port in run.py
+
+## The following is the installation process provided in the original article:
 ### [Disable Linux serial console](https://www.raspberrypi.org/documentation/configuration/uart.md)
   By default, the primary UART is assigned to the Linux console. If you wish to use the primary UART for other purposes, you must reconfigure Raspberry Pi OS. This can be done by using raspi-config:
 
@@ -43,7 +52,7 @@ To:
 
   `sudo pip3 install multitimer`
 
-  `git clone https://github.com/bustedlogic/DWIN_T5UIC1_LCD.git`
+  `git clone https://github.com/odwdinc/DWIN_T5UIC1_LCD.git`
 
 
 ### Wire the display 
@@ -56,51 +65,23 @@ To:
   * Vcc =   2   (5v)
   * Gnd =   6   (GND)
 
-Here's a diagram based on my color selection:
-
-<img src ="images/GPIO.png?raw=true" width="325" height="75">
-<img src ="images/panel.png?raw=true" width="325" height="180">
-
-I tried to take some images to help out with this: You don't have to use the color of wiring that I used:
-
-<img src ="images/wire1.png?raw=true" width="200" height="400"> <img src ="images/wire2.png?raw=true" width="200" height="400">
-
-<img src ="images/wire3.png?raw=true" width="400" height="200">
-
-<img src ="images/wire4.png?raw=true" width="400" height="300">
-
 ### Run The Code
 
+This Code is for OrangePi, if you are using other boards, please follow the original repository.
 Enter the downloaded DWIN_T5UIC1_LCD folder.
-Make new file run.py and copy/paste in the following (pick one)
+Make new file run.py and add
 
-For an Ender3v2
 ```python
 #!/usr/bin/env python3
 from dwinlcd import DWIN_LCD
+import OPi.GPIO as GPIO
 
-encoder_Pins = (26, 19)
-button_Pin = 13
-LCD_COM_Port = '/dev/ttyAMA0'
-API_Key = 'XXXXXX'
-
-DWINLCD = DWIN_LCD(
-	LCD_COM_Port,
-	encoder_Pins,
-	button_Pin,
-	API_Key
-)
-```
-
-If your control wheel is reversed (Voxelab Aquila) use this instead.
-```python
-#!/usr/bin/env python3
-from dwinlcd import DWIN_LCD
-
-encoder_Pins = (19, 26)
-button_Pin = 13
-LCD_COM_Port = '/dev/ttyAMA0'
-API_Key = 'XXXXXX'
+GPIO.setboard(GPIO.H616)
+GPIO.setmode(GPIO.BOARD)
+encoder_Pins = (13, 15)
+button_Pin = 11
+LCD_COM_Port = '/dev/ttyS5'
+API_Key = 'xxxx'
 
 DWINLCD = DWIN_LCD(
 	LCD_COM_Port,

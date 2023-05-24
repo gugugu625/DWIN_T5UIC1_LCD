@@ -3,7 +3,7 @@ import multitimer
 import atexit
 
 from encoder import Encoder
-from RPi import GPIO
+from OPi import GPIO
 
 from printerInterface import PrinterData
 from DWIN_Screen import T5UIC1_LCD
@@ -303,12 +303,12 @@ class DWIN_LCD:
 	# Passing parameters: serial port number
 	# DWIN screen uses serial port 1 to send
 	def __init__(self, USARTx, encoder_pins, button_pin, octoPrint_API_Key):
-		GPIO.setmode(GPIO.BCM)
-		self.encoder = Encoder(encoder_pins[0], encoder_pins[1])
+		#GPIO.setmode(GPIO.BCM)
+		self.encoder = Encoder(encoder_pins[0], encoder_pins[1],self.encoder_has_data)
 		self.button_pin = button_pin
 		GPIO.setup(self.button_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 		GPIO.add_event_detect(self.button_pin, GPIO.BOTH, callback=self.encoder_has_data)
-		self.encoder.callback = self.encoder_has_data
+		# self.encoder.callback = self.encoder_has_data
 		self.EncodeLast = 0
 		self.EncodeMS = current_milli_time() + self.ENCODER_WAIT
 		self.EncodeEnter = current_milli_time() + self.ENCODER_WAIT_ENTER
@@ -2249,6 +2249,7 @@ class DWIN_LCD:
 		self.lcd.UpdateLCD()
 
 	def encoder_has_data(self, val):
+		#print(self)
 		if self.checkkey == self.MainMenu:
 			self.HMI_MainMenu()
 		elif self.checkkey == self.SelectFile:
